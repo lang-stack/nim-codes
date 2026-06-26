@@ -1,1 +1,5 @@
-echo "Hello World"
+echo "Hello World\n"
+
+var name = "Tanjiro"
+
+echo "Hello ", name, ", Welcome"
