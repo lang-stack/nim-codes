@@ -1,5 +1,2 @@
-echo "Hello World\n"
-
-var name = "Tanjiro"
-
-echo "Hello ", name, ", Welcome"
+when isMainModule:
+    echo("Hello World")
