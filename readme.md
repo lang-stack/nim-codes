@@ -762,3 +762,141 @@ echo "Quotient: ", q
 echo "Remainder: ", r
 ```
 
+## Sets & Tables
+
+### Sets
+
+- Set is an unordered collection of unique values.
+- We can add items to set using `incl` method.
+- Sets won't allow duplicated. If we try to add duplicates, it will just ignore and display unique values.
+- We can also remove items from set using `excl` method.
+
+```nim
+var
+    letters: set[char] = {'a', 'b', 'c'}
+    digits = {'1', '2', '3'}
+
+letters.incl('d')
+letters.excl('a')
+
+echo letters, digits
+```
+
+Set operations
+
+```nim
+var
+    s1 = {1, 2, 3}
+    s2 = {3, 4, 5, 6}
+
+echo s1 + s2   # union
+echo s1 * s2   # intersection
+echo s1 - s2   # difference
+echo s1 == s2  # equality
+```
+
+To check the length of the set
+
+```nim
+echo s1.card()
+```
+
+Enums in sets
+
+```nim
+type Color = enum red, green, blue, yellow
+
+var primary: set[Color] = {red, green, blue}
+primary.incl(yellow)
+
+echo yellow in primary
+```
+
+### Table
+
+- Key - value store like dictionary.
+- Key must be hashable.
+- To use tables, we must import `std/tables` module.
+
+```nim
+import std/tables
+
+var capitals = initTable[string, string]()
+capitals["France"] = "Paris"
+capitals["Japan"] = "Tokyo"
+
+echo capitals["Japan"]
+echo "Japan" in capitals
+echo capitals.len
+
+for country, capital in capitals:
+    echo country, " -> ", capital
+```
+
+We can add items to table.
+
+```nim
+capitals["Norway"] = "Oslo"
+```
+
+To check if the table contains a key
+
+```nim
+echo capitals.contains("Norway")
+```
+
+To delete an item from table
+
+```nim
+capitals.del("Norway")
+```
+
+We can use `getOrDefault` method to return default value if item not exist in the table.
+
+```nim
+echo capitals.getOrDefault("Spain", "Unknown")
+```
+
+We can count repititions using `initCountTable`. It will automatically count occurances of the elements.
+
+```nim
+import std/tables
+import std/strutils
+```
+
+```nim
+let text = "nim is fast and nim is fun"
+var wordCount = initCountTable[string]()
+
+for w in text.splitWhiteSpace():
+    wordCount.inc(w)
+
+for word, count in wordCount:
+    echo word, ": ", count
+```
+
+```nim
+var c = initCountTable[string]()
+
+c.inc("apple")
+c.inc("apple")
+c.inc("banana")
+
+echo c["apple"]
+echo c["banana"]
+```
+
+We can use `initOrderedTable` to define elements in the same order as they defined.
+
+```nim
+var t = initOrderedTable[int, string]()
+
+t[2] = "B"
+t[1] = "A"
+t[3] = "C"
+
+for k, v in t:
+    echo k, " -> ", v
+```
+
+
