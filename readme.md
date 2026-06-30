@@ -517,7 +517,7 @@ These are called side effects.
 
 - We can also automate test runs using **nimble** when we initialize nimble project using:
 
-```
+```bash
 nimble init
 ```
 
@@ -531,14 +531,14 @@ basics.nimble
 
 In basics.nimble file, add:
 
-```
+```nim
 task test, "Run all unit tests":
     exec "nimble c -r tests/test1.nim"
 ```
 
 Then run:
 
-```
+```bash
 nimble test
 ```
 
@@ -899,4 +899,112 @@ for k, v in t:
     echo k, " -> ", v
 ```
 
+## Iterators & Ranges
+
+### Iterators
+
+- Iterators in NIM is a special procedures that yields values one at a time.
+- Similat to generators in Python.
+
+```nim
+iterator countUpTo(n: int): int =
+    for i in 1..n:
+        yield i
+
+iterator evenNumbers(limit: int): int =
+    var i = 0
+    while i <= limit:
+        yield i
+        i += 2
+
+for x in countUpTo(5):
+    echo x
+
+for e in evenNumbers(10):
+    echo e
+```
+
+
+
+Multiple `yield` values.
+
+```nim
+iterator fizzBuzz(n: int): string =
+    for i in 1..n:
+        if i mod 15 == 0:
+            yield "FizzBuzz"
+        elif i mod 3 == 0:
+            yield "Fizz"
+        elif i mod 5 == 0:
+            yield "Buzz"
+        else:
+            yield $i
+
+for val in fizzBuzz(15):
+    echo val
+```
+
+Infinite loops
+
+```nim
+iterator naturals(): int =
+    var i = 0
+    while true:
+        yield i
+        inc i
+
+for n in naturals():
+    if n > 5: break
+    echo n
+```
+
+We can also pass iterators as parameters
+
+```nim
+iterator squares(n: int): int =
+    for i in 1..n:
+        yield i * i
+
+proc consume(it: iterator(): int) =
+    for x in it():
+        echo x
+```
+
+### Ranges
+
+```nim
+var x: range[1..10]
+x = 5
+
+echo x
+```
+
+- `x` can only be between 1 to 10. If we define 11, it will throw error at compile time.
+
+We can also use it in iterations
+
+```nim
+for i in 1..5:
+    echo i
+```
+
+We can also use it to display slice of list
+
+```nim
+let numbers = @[1, 2, 3, 4, 5]
+echo numbers[1..3]
+```
+
+- It will display `[2, 3, 4]`, from index 1 to 3 items.
+
+We can also mix ranges and iterators
+
+```nim
+iterator squaresInRange(r: HSlice[int, int]): int =
+    for i in r:
+        yield i * i
+
+for sq in squaresInRange(3..6):
+    echo sq
+```
 
