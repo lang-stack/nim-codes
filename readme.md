@@ -1008,3 +1008,128 @@ for sq in squaresInRange(3..6):
     echo sq
 ```
 
+## String Handling
+
+We can concat strings using `&`
+
+```nim
+var a = "Hello"
+var b = "World"
+
+let c = a & b
+echo c
+```
+
+- We can concat multiple number of strings like this.
+
+We can also use indexing from strings.
+
+```nim
+# Get first character from string
+echo a[0]
+
+# Get last character from string
+echo a[^1]
+
+# Get characters from range
+echo a[1..3]  # Will print ell
+
+# Get characters less than range
+echo a[1..<3]  # Will print el
+```
+
+We can also loop through strings.
+
+```nim
+for ch in "Nim":
+    echo ch
+```
+
+We can change and add to mutable strings.
+
+```nim
+var s = "Hello"
+s[0] = 'h'
+s.add(" world")
+
+echo s
+```
+
+We can also do string interpolation. To do that, we need to import `strformat` library.
+
+```nim
+import strformat
+
+let name = "Bob"
+let score = 42
+
+echo &"Player {name} scored {score}"
+```
+
+We can also cast strings to other types. using `strutils` library.
+
+```nim
+import strutils
+
+let x = parseInt("123")
+let y = parseFloat("3.14")
+
+echo x, ", ", y
+```
+
+Other things we can do using `strutils` library.
+
+```nim
+import strutils
+
+let t = " Nim is okay "
+
+# Strip whitespaces
+echo t.strip()
+
+# To lower case
+echo t.toLowerAscii()
+
+# To upper case
+echo t.toUpperAscii()
+
+# Split as array
+echo "a,b,c".split(",")
+
+# Seperate strings
+echo "abc".join("-")  # Will return as a-b-c
+
+# Check if string starts with space
+echo t.startsWith(" ")
+
+# Check if string ends with space
+echo t.endsWith(" ")
+```
+
+We can also find and replace strings.
+
+```nim
+let f = "the quick brown fox"
+
+# Find the index
+echo f.find("quick")
+
+# Check if strings contains the substring
+echo f.contains("fox")
+
+# Replace string with another
+echo f.replace("brown", "red")
+```
+
+We can also write multi-line strings.
+
+```nim
+let m = """
+This is a
+multi line
+string
+"""
+
+echo m
+```
+
