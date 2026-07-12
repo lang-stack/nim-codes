@@ -75,3 +75,15 @@ string
 
 echo m
 
+var buff = ""
+for i in 0..3:
+    buff.add($i)
+    buff.add(" ")
+
+echo buff
+
+var sb = newStringOfCap(128)
+sb.add("Hello")
+sb.add(" World")
+
+echo sb

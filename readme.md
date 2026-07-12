@@ -1133,3 +1133,26 @@ string
 echo m
 ```
 
+We can slo add to strings using buffers.
+
+```nim
+var buff = ""
+for i in 0..3:
+    buff.add($i)
+    buff.add(" ")
+
+echo buff
+```
+
+We can also add strings using string builders.
+
+```nim
+import strformat
+
+var sb = newStringOfCap(128)
+sb.add("Hello")
+sb.add(" World")
+
+echo sb
+```
+
