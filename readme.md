@@ -1156,3 +1156,139 @@ sb.add(" World")
 echo sb
 ```
 
+## Objects & Type Definitions (OOPS)
+
+We can define object types.
+
+```nim
+type Person = object
+    name: string
+    age: int
+
+var p: Person
+p.name = "Andrew"
+p.age = 30
+
+echo p
+```
+
+We can also se constructor to define the object.
+
+```nim
+let a = Person(name: "Alice", age: 30)
+echo a
+```
+
+We also have reference objects. Reference objects behave like heap allocated instances.
+
+```nim
+type Animal = ref object
+    species: string
+    age: int
+
+var n = Animal(species: "Dog", age: 5)
+n.age += 1
+echo n.age
+```
+
+We can also have object inheritance.
+
+```nim
+type Shape = object of RootObj
+    x, y: int
+
+type Circle = object of Shape
+    radius: float
+
+var c = Circle(x: 10, y: 10, radius: 5.0)
+echo c.x, " ", c.radius
+```
+
+- `RootObj` is the built-in object in Nim.
+
+We can also have reference inheritance.
+
+Reference uses Heap allocator instead of Stack allocator.
+
+```nim
+type Shape = ref object of RootObj
+    x, y: int
+
+type Circle = ref object of Shape
+    radius: float
+
+var c = Circle(x: 10, y: 10, radius: 5.0)
+echo c.x, " ", c.radius
+```
+
+There are also some types of variant unions.
+
+```nim
+type ShapeKind = enum skCircle, skRectangle
+type Shape = object
+    case kind: ShapeKind
+    of skCircle:
+        radius: float
+    of skRectangle:
+        width, height: float
+
+
+var s: Shape
+s = Shape(kind: skCircle, radius: 10)
+echo s.radius
+
+s = Shape(kind: skRectangle, width: 4, height: 6)
+echo s.width * s.height
+```
+
+We can also use methods.
+
+```nim
+type Shape = ref object of RootObj
+    x, y: int
+
+type Circle = ref object of Shape
+    radius: float
+
+method area(s: Shape): float = 0
+method area(c: Circle): float = 3.14 * c.radius * c.radius
+
+var c = Circle(radius: 10)
+echo area(c)
+```
+
+We can also use objects with Procedures.
+
+```nim
+# Person was defined above
+proc celebrateBirthday(p: var Person) = 
+    p.age.inc 
+
+var j = Person(name: "John", age: 30)
+celebrateBirthday(p)
+
+echo p.age
+```
+
+We can also have distinct types in Nim.
+
+```nim
+type UserId = distinct int
+
+var id = UserId(3)
+echo int(id) + 1
+```
+
+We can also use type alias.
+
+```nim
+type Dog = object
+    name: string
+
+proc greet(x: HasName) =
+    echo "Hello ", x.name
+
+greet Person(name: "Bob", age: 10)
+greet Dog(name: "Rex")
+```
+
