@@ -1292,3 +1292,202 @@ greet Person(name: "Bob", age: 10)
 greet Dog(name: "Rex")
 ```
 
+## Methods & Inheritance
+
+In NIM, methods are like procedures.
+
+```nim
+type Animal = ref object of RootObj
+    name: string
+
+method speak(a: Animal) =
+    echo "Animal makes sound"
+
+let a = Animal(name: "Unknown")
+a.speak()
+```
+
+We can also override methods.
+
+```nim
+type Animal = ref object of RootObj
+    name: string
+
+type Dog = ref object of Animal
+type Cat = ref object of Animal
+
+method speak(a: Animal) =
+    echo "Animal makes sound"
+
+method speak(a: Dog) =
+    echo "Woof"
+
+method speak(a: Cat) =
+    echo "Meow"
+
+let a = Animal(name: "Unknown")
+a.speak()
+
+let animals: seq[Animal] = @[
+    Dog(name: "Rex"), 
+    Cat(name: "Misty")
+]
+
+for an in animals:
+    an.speak()
+```
+
+## Encapsulation
+
+```nim
+## encapsulation.nim
+
+type BankAccount* = object
+    balance: float
+
+proc newAccount*(initial: float): BankAccount =
+    result.balance = initial
+
+proc deposit*(acc: var BankAccount, amount: float) =
+    acc.balance += amount
+
+proc withdraw*(acc: var BankAccount, amount: float): bool =
+    if amount <= acc.balance:
+        acc.balance -= amount
+        result = true
+```
+
+```nim
+## encap.nim
+
+import encapsulation
+
+var acc = newAccount(100)
+acc.deposit(50)
+echo acc.withdraw(30)
+```
+
+- We add `*` after public functions and properties. Without `*`, everything will become private.
+- We can import by using filename from the same folder.
+
+## Generics & Templates
+
+Nim has both Templates & Generics.
+
+### Generics
+
+```nim
+proc swapVals[T](a: var T, b: var T) =
+    let temp = a
+    a = b
+    b = temp
+
+var x = 10
+var y = 20
+
+echo "Before swap: x = ", x, ", y = ", y
+swapVals(x, y)
+echo "After swap: x = ", x, ", y = ", y
+
+var x2 = "Hello"
+var y2 = "World"
+
+echo "Before swap: x2 = ", x2, ", y2 = ", y2
+swapVals(x2, y2)
+echo "After swap: x2 = ", x2, ", y2 = ", y2
+```
+
+
+- `T` was defined to represent that the param can be any type. For example, we passed both strings and integers.
+
+We can use this in the stack.
+
+```nim
+type Stack[T] = object
+    items: seq[T]
+
+proc push[T](s: var Stack[T], value: T) = 
+    s.items.add(value)
+
+proc pop[T](s: var Stack[T]): T =
+    result = s.items[^1]
+    s.items.setLen(s.items.len - 1)
+
+var intStack: Stack[int]
+push(intStack, 42)
+push(intStack, 99)
+
+echo pop(intStack)
+echo pop(intStack)
+```
+
+### Templates
+
+- Templates are good for metaprogramming in NIM.
+
+```nim
+template printTwice(x: untyped) =
+    echo x
+    echo x
+
+printTwice("Hello World")
+```
+
+We can also use templates with generic functions.
+
+```nim
+template makeAdder(typeName: typedesc) =
+    proc add(a, b: typeName): typeName = a + b
+
+makeAdder(int)
+makeAdder(float)
+
+echo add(5, 10)
+echo add(2.5, 3.5)
+```
+
+## Macros & Meta Programming
+
+### Macros
+
+```nim
+import macros
+
+macro dbg(x: untyped): untyped =
+    result = quote do:
+        block:
+            let value = `x`
+            echo "dbg(", astToStr(`x`), ") = ", value
+            value
+
+
+let a = 10
+let b = dbg(a * 3)
+```
+
+
+We can also view the tree representation at compile time.
+
+```nim
+macro showAst(x: untyped): untyped =
+    echo x.treeRepr
+    result = x
+
+showAst:
+    let c = 3 + 4
+```
+
+The above code will show this at compile time.
+
+```bash
+StmtList
+  LetSection
+    IdentDefs
+      Ident "c"
+      Empty
+      Infix
+        Ident "+"
+        IntLit 3
+        IntLit 4
+```
+
